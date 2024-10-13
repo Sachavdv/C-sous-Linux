@@ -71,31 +71,26 @@ void MainWindow::setEmail(const char* Text)
 void MainWindow::on_pushButtonSuivant_clicked()
 {
   fprintf(stderr,"Clic sur le bouton >>>\n");
-  i++;
-  if (Elm[i].id != 0)
+  if (Elm[i + 1].id != 0)
   {
-      setNom(Elm[i].nom);
-      setEmail(Elm[i].email);
-  }
-  else
-  {
-      i--;
+    i++;
+    currentUser();
   }
 }
 
 void MainWindow::on_pushButtonPrecedent_clicked()
 {
   fprintf(stderr,"Clic sur le bouton <<<\n");
-  i--;
-  if (Elm[i].id != 0)
+  if(Elm[i - 1].id != 0)
   {
+    i--;
+    currentUser();
+  }
+}
+void MainWindow::currentUser()
+{
       setNom(Elm[i].nom);
       setEmail(Elm[i].email);
-  }
-  else
-  {
-      i++;
-  }
 }
 
 void MainWindow::on_pushButtonQuitter_clicked()

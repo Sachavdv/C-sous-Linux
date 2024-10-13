@@ -22,6 +22,7 @@ private slots:
     void on_pushButtonSuivant_clicked();
     void on_pushButtonPrecedent_clicked();
     void on_pushButtonQuitter_clicked();
+    void currentUser();
 
 private:
     Ui::MainWindow *ui;
