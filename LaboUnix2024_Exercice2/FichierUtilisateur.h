@@ -16,7 +16,7 @@ int estPresent(const char* nom);
 //           0 si pas trouve
 //           la position (1,2,3, ...) dans le fichier si trouve
 
-int hash(const char* motDePasse)
+int hash(const char* motDePasse);
 // calcul le hash du mot de passe = (somme des codes ASCII) % 97
 
 void ajouteUtilisateur(const char* nom, const char* motDePasse);

@@ -1,25 +1,30 @@
+#include <cstdio>    
+#include <cstring>    
+#include <fcntl.h>    
+#include <unistd.h>   
 #include "FichierUtilisateur.h"
 
 int estPresent(const char* nom)
 {
   UTILISATEUR user;
-  int fd = 0;
+  int fd;
   int position = 1;
 
-  if((fd = open(FICHIER_UTILISATEURS, O_RDONLY)) != -1)
+  if((fd = open(FICHIER_UTILISATEURS, O_RDONLY, 0644)) != -1)
   {
     while(read(fd, &user, sizeof(UTILISATEUR)) == sizeof(UTILISATEUR))
     {
       if(strcmp(user.nom, nom) == 0)
       {
-        close(fd),
+        close(fd);
         return position;
       }
       position++;
     }
     close(fd);
+    return 0;
   }
-  printf("erreur lors de l ouverture du fichier");
+  printf("1 erreur lors de l ouverture du fichier");
   return -1;
 }
 
@@ -48,10 +53,10 @@ void ajouteUtilisateur(const char* nom, const char* motDePasse)
 {
   UTILISATEUR add;
   int fd;
-  if((fd = open(FICHIER_UTILISATEURS, O_WRONLY | O_CREAT | O_APPEND)) == -1)
+  if((fd = open(FICHIER_UTILISATEURS, O_WRONLY | O_CREAT | O_APPEND, 0644)) == -1)
   {
-    printf("erreur lors de l'ouverture du FichierUtilisateur");
-    return -1;
+    printf("2 erreur lors de l'ouverture du FichierUtilisateur");
+    return;
   }
 
   strcpy(add.nom, nom);
@@ -72,7 +77,7 @@ int verifieMotDePasse(int pos, const char* motDePasse)
   if((fd = open(FICHIER_UTILISATEURS, O_RDONLY)) != -1)
   {
     lseek(fd, sizeof(UTILISATEUR) * (pos - 1), SEEK_CUR);
-    read(ld, &cmpMdp, sizeof(UTILISATEUR));
+    read(fd, &cmpMdp, sizeof(UTILISATEUR));
     ret = hash(motDePasse);
     if(ret == cmpMdp.hash)
     {
@@ -83,7 +88,7 @@ int verifieMotDePasse(int pos, const char* motDePasse)
     close(fd);
     return 0;
   }
-  printf("erreur lors de l'ouverture du fichier");
+  printf("3 erreur lors de l'ouverture du fichier");
   return -1;
 }
 
@@ -103,6 +108,6 @@ int listeUtilisateurs(UTILISATEUR *vecteur) // le vecteur doit etre suffisamment
     close(fd);
     return i;
   }
-  printf("erreur lors de l'ouverture du fichier");
+  printf("4 erreur lors de l'ouverture du fichier");
   return -1;
 }

@@ -19,10 +19,7 @@ MyWindow::MyWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MyWindow)
     ui->tableWidgetClients->horizontalHeader()->setStretchLastSection(true);
     ui->tableWidgetClients->verticalHeader()->setVisible(false);
     ui->tableWidgetClients->horizontalHeader()->setStyleSheet("background-color: lightyellow");
-
-    /// Exemples d'utilisation (à supprimer)
-    setResultat(" ---- Bonjour !!! ---- ");
-    ajouteTupleTableUtilisateurs("wagner",10);
+    
 }
 
 MyWindow::~MyWindow()
@@ -128,20 +125,67 @@ void MyWindow::videTableUtilisateurs()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void MyWindow::on_pushButtonLogin_clicked()
 {
-  // Récupération nom et mot de passe
-  char nom[20],motDePasse[20];
-  int nouvelUtilisateur;
-  strcpy(nom,getNom());
-  strcpy(motDePasse,getMotDePasse());
-  nouvelUtilisateur = isNouveauChecked();
+    int verif = 0, ret = 0;
+    char nom[20], motDePasse[20];
+    int nouvelUtilisateur;
+    strcpy(nom,getNom());
+    strcpy(motDePasse,getMotDePasse());
+    nouvelUtilisateur = isNouveauChecked();
 
-  // TO DO
-  printf("Clic sur bouton LOGIN : --%s--%s--%d--\n",nom,motDePasse,nouvelUtilisateur);
+    printf("Clic sur bouton LOGIN : --%s--%s--%d--\n", nom, motDePasse, nouvelUtilisateur);
+
+    if (nouvelUtilisateur == 1)
+    {
+        ret = estPresent(nom);
+        if (ret >= 1)
+        {
+            setResultat("Utilisateur déjà existant");
+            return;
+        }
+        ajouteUtilisateur(nom, motDePasse); 
+        setResultat("Nouvel utilisateur créé : bienvenue");
+        return;
+    }
+
+
+    ret = estPresent(nom);
+    if (ret >= 1)
+    {
+        verif = verifieMotDePasse(ret, motDePasse);
+        if (verif == 1)
+        {
+            setResultat("Re-bonjour cher utilisateur");
+            return;
+        }
+        setResultat("Mot de passe incorrect");
+        return;
+    }
+
+    setResultat("Utilisateur inconnu");
+    return;
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void MyWindow::on_pushButtonAfficheFichier_clicked()
 {
-  // TO DO
+  
+  int i = 0;
   printf("Clic sur bouton AFFICHER\n");
+
+  UTILISATEUR tabUser[100];
+  int nbutilisateur = listeUtilisateurs(tabUser);
+
+  if(nbutilisateur >= 0)
+  {
+    videTableUtilisateurs();
+
+    for(i = 0; i < nbutilisateur; i++)
+    {
+      UTILISATEUR user = tabUser[i];
+      ajouteTupleTableUtilisateurs(user.nom, user.hash);
+    }
+    return;
+  }
+  setResultat("aucun utilisateur");
 }
